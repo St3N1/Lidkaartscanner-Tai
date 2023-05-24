@@ -43,7 +43,7 @@ class App(customtkinter.CTk):
                                                           width=600)
         self.add_menu_display211.grid(pady=15, padx=15, sticky="nws")
 
-        columns = ['Datum', 'Voornaam', 'Achternaam']
+        columns = ['Datum', 'Achternaam', 'Voornaam']
         self.table = MyTreeview(master=self.add_menu_display211,
                                 columns=columns,
                                 height=17,

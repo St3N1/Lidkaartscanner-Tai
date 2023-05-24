@@ -1,8 +1,7 @@
 import sqlite3
 from datetime import datetime
 import cv2
-import numpy as np
-from pyzbar.pyzbar import decode
+from zxingcpp import read_barcodes
 
 
 def aanwezigheid_toevoegen(achternaam, voornaam, datum):
@@ -31,45 +30,46 @@ def open_database():
                     Datum DATE NOT NULL, UNIQUE(Achternaam, Voornaam, Datum));''')
 
 
-def decoder(image):
-    gray_img = cv2.cvtColor(image, 0)
-    barcode = decode(gray_img)
-
-    for obj in barcode:
-        points = obj.polygon
-        (x, y, w, h) = obj.rect
-        pts = np.array(points, np.int32)
-        pts = pts.reshape((-1, 1, 2))
-        cv2.polylines(image, [pts], True, (0, 255, 0), 3)
-
-        naamVolledig = obj.data.decode("utf-8")[4:]
-
-        index = 1
-        for letter in naamVolledig:
-            if letter != letter.upper():
-                index += 1
-            elif letter == letter.upper() and index != 1:
-                achternaam = naamVolledig[:index]
-                index = 1
-        voornaam = naamVolledig[-index:]
-
-        string = f"{str(voornaam)} {str(achternaam)}"
-        cv2.putText(image, string, (x, y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
-        open_database()
-        aanwezigheid_toevoegen(achternaam, voornaam, date.strftime("%d/%m/%Y"))
-
-
 def scanner():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("http://192.168.1.178:4000/video")
     while True:
         ret, frame = cap.read()
-        decoder(frame)
-        cv2.imshow('Scanner', frame)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        barcodes = read_barcodes(gray)
+
+        gegevens = ""
+        for code in barcodes:
+            gegevens = code.text
+                
+        if gegevens != "":
+            voornaam = ""
+            achternaam = ""
+            switch = False
+            for i, letter in enumerate(gegevens):
+                if switch:
+                    voornaam += letter
+                else:
+                    achternaam += letter
+
+                if gegevens[i] == gegevens[i].upper() and gegevens[i-1] != " " and i != 0 and gegevens[i] != " ":
+                    switch = True
+
+            voornaam = achternaam[len(achternaam)-1:] + voornaam
+            achternaam = achternaam[:len(achternaam)-1]
+
+            if achternaam != "A":
+                open_database()
+                aanwezigheid_toevoegen(achternaam, voornaam, date.strftime("%d/%m/%Y"))
+
+        cv2.imshow("Barcode Scanner", frame)
+
         code = cv2.waitKey(10)
         if code == ord('q'):
             break
 
 
 if __name__ == "__main__":
-    scanner()
+    try:
+        scanner()
+    except:
+        scanner()
