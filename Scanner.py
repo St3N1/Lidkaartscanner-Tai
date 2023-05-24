@@ -4,9 +4,7 @@ from datetime import datetime
 import sqlite3
 import cv2
 
-
-url = "http://192.168.1.178:8080/video"
-cap = cv2.VideoCapture(url)
+cap = cv2.VideoCapture(0)
 
 
 def aanwezigheid_toevoegen(achternaam, voornaam, datum):
@@ -64,18 +62,15 @@ def decoder(image):
         aanwezigheid_toevoegen(achternaam, voornaam, date.strftime("%d/%m/%Y"))
 
 
-def main():
+def scanner():
     while True:
         ret, frame = cap.read()
         decoder(frame)
-        cv2.imshow('Image', frame)
+        cv2.imshow('Scanner', frame)
         code = cv2.waitKey(10)
         if code == ord('q'):
             break
 
 
-try:
-    if __file__:
-        main()
-except:
-    DATABASE.close()
+if __name__ == "__main__":
+    scanner()
