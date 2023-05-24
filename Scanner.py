@@ -1,8 +1,8 @@
+import sqlite3
+from datetime import datetime
+import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
-from datetime import datetime
-import sqlite3
-import cv2
 
 cap = cv2.VideoCapture(0)
 

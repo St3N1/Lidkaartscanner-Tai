@@ -1,6 +1,6 @@
-from flask import Flask, jsonify, redirect
-import sqlite3
 import os
+import sqlite3
+from flask import Flask, jsonify, redirect
 
 app = Flask(__name__)
 
@@ -8,6 +8,7 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     return redirect("/aanwezigheidlijst/<jaar>")
+
 
 @app.route("/aanwezigheidlijst/<jaar>")
 def aanwezigheidlijst_weergeven(jaar: int):
