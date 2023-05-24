@@ -4,8 +4,6 @@ import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 
-cap = cv2.VideoCapture(0)
-
 
 def aanwezigheid_toevoegen(achternaam, voornaam, datum):
     try:
@@ -63,6 +61,7 @@ def decoder(image):
 
 
 def scanner():
+    cap = cv2.VideoCapture(0)
     while True:
         ret, frame = cap.read()
         decoder(frame)
