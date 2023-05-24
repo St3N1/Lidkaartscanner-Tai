@@ -69,7 +69,4 @@ def scanner():
 
 
 if __name__ == "__main__":
-    try:
-        scanner()
-    except:
-        scanner()
+    scanner()
