@@ -101,7 +101,7 @@ class App(customtkinter.CTk):
         for item in self.data:
             if item != "detail":
                 self.table.insert("", "end", values=(
-                    item[3], item[1], item[2]))
+                    item[3], item[2], item[1]))
 
 
 if __name__ == "__main__":
