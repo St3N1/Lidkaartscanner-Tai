@@ -68,7 +68,7 @@ def decoder(frame):
                 cv2.putText(frame, f"{voornaam} {achternaam}", (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
 def scanner():
-    cap = cv2.VideoCapture("http://192.168.1.178:4000/video")
+    cap = cv2.VideoCapture(0)
     while True:
         ret, frame = cap.read()
         decoder(frame)

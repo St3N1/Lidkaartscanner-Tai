@@ -105,5 +105,5 @@ class App(customtkinter.CTk):
 
 
 if __name__ == "__main__":
-    app = App("http://localhost:5000")
+    app = App("http://192.168.0.100:5000")
     app.mainloop()
